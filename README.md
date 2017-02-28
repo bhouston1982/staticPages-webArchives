@@ -13,6 +13,12 @@ Other major changes from the original (other than localization changes):
 
 + Added code to generate a Revision Description change note whenever the script is run. (For right now this also lets me track how many times I have to run the code before I get it right!)
 
++ Added code to check if a capture is a main page or a subpage, and, if the latter, create the component a level down in the web series
+
+A few usability notes on UWM finding aids:
++ If the contents list is not serialized, it needs to be serialized at the c02 level. I have thus far done this by moving everything into a general "Series 1: General Files, YYYY-YYYY" proxy series.
++ The code REALLY dislikes UTF-8 encoding. Watch for curly quotes and apostrophes when copying from the Archive-It metadata sheet.
++ Series and subseries need to be determined before running the script. If they collide with existing series, the code will crash-- or worse, erase things.
 
 
 # staticPages-webArchives
