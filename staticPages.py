@@ -280,7 +280,7 @@ for collection in collections:
                                                         aiContainer.set("type", "Web-Archive")
                                                         aiContainer.text = "1"
                                                         aiUnittitle = ET.SubElement(aiDid, "unittitle")
-                                                        aiUnittitle.text = webUrl + " - University Archives collection"
+                                                        aiUnittitle.text = "University Archives collection"
                                                         aiUnitdate = ET.SubElement(aiDid, "unitdate")
                                                         firstDacs, firstNormal = makeDate(firstDate)
                                                         lastDacs, lastNormal = makeDate(lastDate)
@@ -305,7 +305,7 @@ for collection in collections:
                                                         wayContainer.set("type", "Web-Archive")
                                                         wayContainer.text = "2"
                                                         wayUnittitle = ET.SubElement(wayDid, "unittitle")
-                                                        wayUnittitle.text = webUrl + " - Internet Archive collection"
+                                                        wayUnittitle.text = "Internet Archive collection"
                                                         wayUnitdate = ET.SubElement(wayDid, "unitdate")
                                                         firstDacs, firstNormal = makeDate(wayFirstDate)
                                                         lastDacs, lastNormal = makeDate(wayLastDate)
@@ -317,15 +317,21 @@ for collection in collections:
                                                         wayDao.set("show", "new")
                                                         wayDao.set("href", "https://web.archive.org/web/*/" + webUrl)
                                                         series.append(wayFile)
-
+                ########Add the file level URLs#########
                 elif collection[6] == 2:
-                       if fa.find("archdesc/dsc/c01[@otherlevel='processed']/c02[@id='" + str(webArchSeries) + "']") is not None:
+                       if fa.find("archdesc/dsc/c01[@otherlevel='processed']/c02[@id='" + str(webArchSeries) + "']") is None:
                                newSeries = ET.Element("c02")
                                newSeries.set("id", webArchSeries)
                                did = ET.SubElement(newSeries, "did")
                                unittitle = ET.SubElement(did, "unittitle")
-                               unittitle.text = str(collection[10]) +". Web Archives"                                                        
+                               unittitle.text = str(collection[10]) +". Web Archives"                              
                                fa.find("archdesc/dsc/c01[@otherlevel='processed']").append(newSeries)
+                               if not newSeries.find("scopecontent") is None:
+                                       newSeries.remove(newSeries.find("scopecontent"))
+                               SC = ET.SubElement(newSeries, "scopecontent")
+                               SCP = ET.SubElement(SC, "p")
+                               SCP.text = "Web sites and pages created by " + str(collection[4]) + " and collected by either UWM's Archive-It account or the general Internet Archive Wayback Machine." 
+                               print "Added Scope/Content Note! (Series Level)"                               
                                
                        match = False                      
                        for series in fa.find("archdesc/dsc/c01[@otherlevel='processed']/c02[@id='" + str(webArchSeries) + "']"):
@@ -360,7 +366,7 @@ for collection in collections:
                                                        series.find("did").insert(1, unittitle)
                                                #remove existing <unitdate>s
                                                if not series.find("did/unitdate") is None:
-                                                       series.find("did").remove(series.find("did/unitdate"))
+                                                      series.find("did").remove(series.find("did/unitdate"))
                                                #Add new <unitdate>
                                                unitdate = ET.Element("unitdate")
                                                unitdate.set("type", "inclusive")
@@ -369,14 +375,20 @@ for collection in collections:
                                                series.find("did").insert(2, unitdate)
                                                #remove existing <physdesc>
                                                if not series.find("did/physdesc") is None:
-                                                       series.find("did").remove(series.find("did/physdesc"))
+                                                      series.find("did").remove(series.find("did/physdesc"))
                                                #Add new <physdesc> with count of captures
                                                physdescElement = ET. Element ("physdesc")
                                                extentElement = ET.Element("extent")
                                                extentElement.text = str(aiCount + waybackCount)
                                                extentElement.set("unit", "captures")
-                                               physdescElement.append(extentElement)
+                                               physdescElement.append(extentElement)                                               
                                                series.find("did").append(physdescElement)
+                                               if not series.find("scopecontent") is None:
+                                                      series.remove(series.find("scopecontent"))
+                                                      SC = ET.SubElement(series, "scopecontent")
+                                                      SCP = ET.SubElement(SC, "p")
+                                                      SCP.text = str(collection[9])
+                                                      print "Added Scope/Content Note!"
                                               
                                                         
                                                 #remove existing web archives links
@@ -396,7 +408,7 @@ for collection in collections:
                                                        aiContainer.set("type", "Web-Archive")
                                                        aiContainer.text = "1"
                                                        aiUnittitle = ET.SubElement(aiDid, "unittitle")
-                                                       aiUnittitle.text = webUrl + " - University Archives collection"
+                                                       aiUnittitle.text = "University Archives collection"
                                                        aiUnitdate = ET.SubElement(aiDid, "unitdate")
                                                        firstDacs, firstNormal = makeDate(firstDate)
                                                        lastDacs, lastNormal = makeDate(lastDate)
@@ -421,7 +433,7 @@ for collection in collections:
                                                        wayContainer.set("type", "Web-Archive")
                                                        wayContainer.text = "2"
                                                        wayUnittitle = ET.SubElement(wayDid, "unittitle")
-                                                       wayUnittitle.text = webUrl + " - Internet Archive collection"
+                                                       wayUnittitle.text = "Internet Archive collection"
                                                        wayUnitdate = ET.SubElement(wayDid, "unitdate")
                                                        firstDacs, firstNormal = makeDate(wayFirstDate)
                                                        lastDacs, lastNormal = makeDate(wayLastDate)
