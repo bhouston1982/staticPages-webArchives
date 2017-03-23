@@ -337,7 +337,7 @@ for collection in collections:
                                                acqP2.text = "Web records from UWM are collected on a semi-annual basis. Crawls of the UWM Web Site may be performed at more frequent intervals in cases of major events, significant additions or changes to the UWM Website or the websites of schools and colleges, etc. Social Media feeds are crawled on an as-requested basis."
                                        if archiveItCollection == "4389":
                                                acqP2.text = "The Web records of SAA are collected on a semi-annual basis by UWM as part of their committment as custodians of the SAA archives. These archives in many cases constitute the official record of the groups to which they pertain. For more information, consult SAA's Records Retention Policy (2014)."
-                                       series.insert(1, acqinfo)
+                                       newSeries.insert(1, acqinfo)
                                if not newSeries.find("scopecontent") is None:
                                        newSeries.remove(newSeries.find("scopecontent"))
                                SC = ET.SubElement(newSeries, "scopecontent")
