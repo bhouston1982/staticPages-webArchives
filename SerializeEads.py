@@ -17,12 +17,14 @@ if os.name == "nt":
 	
 	#Finding Aid Directory
 	faDir = "H:\Departments\Archives\Students\Web Archiving\serialize"
-                
+
+#Iterate through files in the directory                
 for file in os.listdir(faDir):
         eadFile = os.path.join(faDir, str(file))
         faInput= ET.parse(eadFile, parser)
         fa = faInput.getroot()
 
+#Update the revisiondesc note
         now = datetime.date.today()
         newchange = ET.Element("change")
         newchange.set("encodinganalog","583")
@@ -31,7 +33,11 @@ for file in os.listdir(faDir):
         changedate.text = now.strftime("%B %d, %Y")
         changeitem = ET.SubElement(newchange, "item")
         changeitem.text = "Brad Houston is testing this script."
-        fa.find(".//revisiondesc").insert(0,newchange)                
+        fa.find(".//revisiondesc").insert(0,newchange)
+
+        #Move all components in the processed collection down one level.
+        #When I get better at this I will have it automatically count the levels and do that many loops.
+        #For now, we're just going to do it this way, through the c06 level.
         for c02 in fa.find("archdesc/dsc/c01[@otherlevel='processed']"):
                 for c03 in c02:
                         for c04 in c03:
@@ -44,14 +50,17 @@ for file in os.listdir(faDir):
                                 c03.tag = "c04"
                 if c02.tag == "c02":
                         c02.tag = "c03"
+
+#Cleanup the current processed contents list and prep for moving                     
+
         oldseries = fa.find("archdesc/dsc/c01[1]")
         olddid = oldseries.find("did[1]")
         uid = olddid.find("unitid[1]")
         title = olddid.find("unittitle[1]")
-        #olddid.remove(uid)     
+        #olddid.remove(uid)     [not working yet]
         unitdate = olddid.find("unitdate[1]")
         extent = olddid.find("physdesc[1]")
-        #olddid.remove(extent)
+        #olddid.remove(extent) [not working yet]
         olddid.remove(title)
         oldtitle = ET.Element("unittitle")
         oldtitle.text = "1. General Files, "
@@ -62,20 +71,22 @@ for file in os.listdir(faDir):
         parent = oldseries.getparent()
         parent.remove(oldseries)
 
+#Add the new processed component and nest the old one within as Series 1
+
         newseries = ET.Element("c01")
         newseries.set("level", "otherlevel")
         newseries.set("otherlevel", "processed")
         newdid = ET.SubElement(newseries, "did")
         newtitle = ET.SubElement(newdid, "unittitle")
         newtitle.text = "Records, "
-        #newdid.insert(2, uid)
-        #newdid.insert(3, unitdate)
-        #newdid.insert(4, extent)
+        #newdid.insert(2, uid) [Not working yet]
+        #newdid.insert(3, unitdate) [Not Working yet]
+        #newdid.insert(4, extent) [Not Working yet]
         newseries.insert(5, oldseries)
         parent.insert(1, newseries)
 
         
-
+#Don't forget to save your work!
                             
         faString = ET.tostring(fa, pretty_print=True, xml_declaration=True, encoding="utf-8")
         faFile = open(eadFile, "w")
