@@ -32,27 +32,40 @@ for file in os.listdir(faDir):
         changeitem = ET.SubElement(newchange, "item")
         changeitem.text = "Brad Houston is testing this script."
         fa.find(".//revisiondesc").insert(0,newchange)                
-        if fa.find("archdesc/dsc/c01[@otherlevel='processed']/c02[@level='series']") is None:
-                print "Contents List for " + str(file) + " needs to be updated!"
-        if not fa.find("archdesc/dsc/c01[@otherlevel='processed']//c06") is None:
-                print "Renaming c06"
-                for tag in fa:
-                        fa = fa.replace(fa.find("c06"), "c07")
-        if not fa.find("archdesc/dsc/c01[@otherlevel='processed']//c05") is None:
-                print "Renaming c05"
-                fa = fa.replace(fa.find("c05"), "c06")
-        if not fa.find("archdesc/dsc/c01[@otherlevel='processed']//c04") is None:
-                print "Renaming c04"
-                fa = fa.replace(fa.find("c04"), "c05")
-        if not fa.find("archdesc/dsc/c01[@otherlevel='processed']//c03") is None:
-                print "Renaming c03"
-                fa = fa.replace(fa.find("c03"), "c04")
-        if not fa.find("archdesc/dsc/c01[@otherlevel='processed']//c03") is None:
-                print "Renaming c02"
-                fa = fa.replace(fa.find("c02"), "c03")
-        print "moving the existing contents into a variable"
-       
-        
+
+        oldseries = fa.find("archdesc/dsc/c01[1]")
+        olddid = oldseries.find("did[1]")
+        uid = olddid.find("unitid")
+        title = olddid.find("unittitle[1]")
+        #olddid.remove(uid)     
+        unitdate = title.find("unitdate[1]")
+        #title.remove(unitdate)
+        extent = olddid.find("physdesc[1]")
+        #olddid.remove(extent)
+        olddid.remove(title)
+        oldtitle = ET.Element("unittitle")
+        oldtitle.text = "1. General Files, "
+        olddid.insert(1, oldtitle)
+        #olddid.insert(2, unitdate)
+        oldseries.tag = "c02"
+        oldseries.set("level", "series")
+        oldseries.set("id", "series1")
+        parent = oldseries.getparent()
+        parent.remove(oldseries)
+
+        newseries = ET.Element("c01")
+        newseries.set("level", "otherlevel")
+        newseries.set("otherlevel", "processed")
+        newdid = ET.SubElement(newseries, "did")
+        newtitle = ET.SubElement(newdid, "unittitle")
+        newtitle.text = "Records, "
+        #newdid.insert(2, uid)
+        #newdid.insert(3, unitdate)
+        #newdid.insert(4, extent)
+        newdid.insert(5, oldseries)
+        parent.insert(1, newseries)
+
+                            
         faString = ET.tostring(fa, pretty_print=True, xml_declaration=True, encoding="utf-8")
         faFile = open(eadFile, "w")
         faFile.write(faString)
