@@ -288,9 +288,11 @@ for collection in collections:
                                                         aiUnitdate.text = firstDacs + "-" + lastDacs
                                                         aiDao = ET.SubElement(aiDid, "dao")
                                                         aiDao.set("actuate", "onrequest")
-                                                        aiDao.set("linktype", "simple")
                                                         aiDao.set("show", "new")
                                                         aiDao.set("href", "http://wayback.archive-it.org/" + archiveItCollection + "/*/" + webUrl)
+                                                        aiDaoDesc = ET.SubElement(aiDao, "daodesc")
+                                                        aiDaoP = ET.SubElement(aiDaoDesc, "p")
+                                                        aiDaoP.text = "View online"
                                                         series.append(aiFile)
                                                         
                                                         
@@ -315,6 +317,9 @@ for collection in collections:
                                                         wayDao.set("actuate", "onrequest")                                                        
                                                         wayDao.set("show", "new")
                                                         wayDao.set("href", "https://web.archive.org/web/*/" + webUrl)
+                                                        wayDaoDesc = ET.SubElement(wayDao, "daodesc")
+                                                        wayDaoP = ET.SubElement(wayDaoDesc, "p")
+                                                        wayDaoP.text = "View online"
                                                         series.append(wayFile)
                 ########Add the file level URLs#########
                 elif collection[6] == 2:
@@ -429,6 +434,9 @@ for collection in collections:
                                                        aiDao.set("actuate", "onrequest")
                                                        aiDao.set("show", "new")
                                                        aiDao.set("href", "http://wayback.archive-it.org/" + archiveItCollection + "/*/" + webUrl)
+                                                       aiDaoDesc = ET.SubElement(aiDao, "daodesc")
+                                                       aiDaoP = ET.SubElement(aiDaoDesc, "p")
+                                                       aiDaoP.text = "View online"
                                                        series.append(aiFile)
                                                        
                                                         
@@ -454,6 +462,9 @@ for collection in collections:
                                                        wayDao.set("linktype", "simple")
                                                        wayDao.set("show", "new")
                                                        wayDao.set("href", "https://web.archive.org/web/*/" + webUrl)
+                                                       wayDaoDesc = ET.SubElement(wayDao, "daodesc")
+                                                       wayDaoP = ET.SubElement(wayDaoDesc, "p")
+                                                       wayDaoP.text = "View online"
                                                        series.append(wayFile)
                 else:
                         print "Haven't done this level yet!"
