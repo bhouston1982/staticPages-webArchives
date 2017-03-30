@@ -218,7 +218,7 @@ for collection in collections:
                                                 unitdate.set("type", "inclusive")
                                                 unitdate.set("normal", seriesNormal)
                                                 unitdate.text = seriesDacs
-                                                series.find("did").insert(2, unitdate)
+                                                series.find("did/unittitle").insert(0, unitdate)
                                                 #remove existing <physdesc>
                                                 if not series.find("did/physdesc") is None:
                                                         series.find("did").remove(series.find("did/physdesc"))
@@ -328,7 +328,7 @@ for collection in collections:
                                newSeries.set("id", webArchSeries)
                                did = ET.SubElement(newSeries, "did")
                                unittitle = ET.SubElement(did, "unittitle")
-                               unittitle.text = str(collection[10]) +". Web Archives"                              
+                               unittitle.text = str(collection[10]) +". Web Archives, "                              
                                fa.find("archdesc/dsc/c01[@otherlevel='processed']").append(newSeries)
                                if newSeries.find("acqinfo") is None:
                                        acqinfo = ET.Element("acqinfo")
@@ -373,7 +373,7 @@ for collection in collections:
                                                #find or create <unitid>
                                                if series.find("did/unitid") is None:
                                                        unitid = ET.Element("unitid")                                                       
-                                                       unitid.text = str(webUrl)
+                                                       unitid.text = "Web Subseries " + str(collection[8])
                                                        series.find("did").insert(0, unitid)
                                                #update <unittitle>
                                                if series.find("did/unittitle") is None:
