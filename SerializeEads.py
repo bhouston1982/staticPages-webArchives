@@ -32,21 +32,30 @@ for file in os.listdir(faDir):
         changeitem = ET.SubElement(newchange, "item")
         changeitem.text = "Brad Houston is testing this script."
         fa.find(".//revisiondesc").insert(0,newchange)                
-
+        for c02 in fa.find("archdesc/dsc/c01[@otherlevel='processed']"):
+                for c03 in c02:
+                        for c04 in c03:
+                                for c05 in c04:
+                                        if c05.tag == "c05":
+                                                c05.tag = "c06"
+                                if c04.tag == "c04":
+                                        c04.tag = "c05"
+                        if c03.tag == "c03":
+                                c03.tag = "c04"
+                if c02.tag == "c02":
+                        c02.tag = "c03"
         oldseries = fa.find("archdesc/dsc/c01[1]")
         olddid = oldseries.find("did[1]")
-        uid = olddid.find("unitid")
+        uid = olddid.find("unitid[1]")
         title = olddid.find("unittitle[1]")
         #olddid.remove(uid)     
-        unitdate = title.find("unitdate[1]")
-        #title.remove(unitdate)
+        unitdate = olddid.find("unitdate[1]")
         extent = olddid.find("physdesc[1]")
         #olddid.remove(extent)
         olddid.remove(title)
         oldtitle = ET.Element("unittitle")
         oldtitle.text = "1. General Files, "
         olddid.insert(1, oldtitle)
-        #olddid.insert(2, unitdate)
         oldseries.tag = "c02"
         oldseries.set("level", "series")
         oldseries.set("id", "series1")
@@ -62,8 +71,10 @@ for file in os.listdir(faDir):
         #newdid.insert(2, uid)
         #newdid.insert(3, unitdate)
         #newdid.insert(4, extent)
-        newdid.insert(5, oldseries)
+        newseries.insert(5, oldseries)
         parent.insert(1, newseries)
+
+        
 
                             
         faString = ET.tostring(fa, pretty_print=True, xml_declaration=True, encoding="utf-8")
