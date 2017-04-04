@@ -31,16 +31,19 @@ for file in os.listdir(faDir):
                 
         else:
 #Update the revisiondesc note
-                now = datetime.date.today()
-                newchange = ET.Element("change")
-                newchange.set("encodinganalog","583")
-                changedate = ET.SubElement(newchange, "date")
-                changedate.set("normal", now.isoformat())
-                changedate.text = now.strftime("%B %d, %Y")
-                changeitem = ET.SubElement(newchange, "item")
-                changeitem.text = "Brad Houston serialized the contents list to prepare for insertion of web archives."
-                fa.find(".//revisiondesc").insert(0,newchange)
-
+                try:
+                        now = datetime.date.today()
+                        newchange = ET.Element("change")
+                        newchange.set("encodinganalog","583")
+                        changedate = ET.SubElement(newchange, "date")
+                        changedate.set("normal", now.isoformat())
+                        changedate.text = now.strftime("%B %d, %Y")
+                        changeitem = ET.SubElement(newchange, "item")
+                        changeitem.text = "Brad Houston serialized the contents list to prepare for insertion of web archives."
+                        fa.find(".//revisiondesc").insert(0,newchange)
+                except:
+                        print "No revisiondescription note!"
+                        continue
                 #Move all components in the processed collection down one level.
                 #When I get better at this I will have it automatically count the levels and do that many loops.
                 #For now, we're just going to do it this way, through the c06 level.
@@ -61,20 +64,21 @@ for file in os.listdir(faDir):
         #Cleanup the current processed contents list and prep for moving
                 try:
                         print "Moving series for " + str(file) + "."
-                        oldseries = fa.find("archdesc/dsc/c01[1]")
+                        oldseries = fa.xpath("//c01")[0]
                         serID = oldseries.attrib.get("id")
                         olddid = oldseries.find("did[1]")
-                        uid = olddid.find("unitid")
+                        uid = olddid.find("unitid[1]")
                         title = olddid.find("unittitle[1]")                        
                         olddid.remove(uid)     
-                        unitdate = olddid.find("unittitle/unitdate")
+                        unitdate = title.find("unitdate[1]")
                         title.text = "1. General Files, " + unitdate.text
                         olddid.insert(1, unitdate)
-                        extent = olddid.find("physdesc")
+                        print "inserted series unitdate"
+                        extent = olddid.find("physdesc[1]")
                         olddid.remove(extent) 
                         olddid.remove(title)
-                        oldtitle = ET.Element("unittitle")
                         olddid.insert(0, title)
+                        print "inserted series title"
                         oldseries.tag = "c02"
                         oldseries.set("level", "series")
                         oldseries.set("id", "series1")
@@ -86,15 +90,20 @@ for file in os.listdir(faDir):
 
                         newseries = ET.Element("c01")
                         newseries.set("id", serID)
+                        print "set newseriesID"
                         newseries.set("level", "otherlevel")
                         newseries.set("otherlevel", "processed")
                         newdid = ET.SubElement(newseries, "did")
                         newtitle = ET.SubElement(newdid, "unittitle")
                         newtitle.text = "Records, "
-                        newdid.insert(0, uid) 
-                        newdid.insert(3, unitdate) 
-                        newdid.insert(4, extent) 
+                        newdid.insert(0, uid)
+                        print "added processed id"
+                        newdid.insert(3, unitdate)
+                        print "added processed date"
+                        newdid.insert(4, extent)
+                        print "added processed extent"
                         newseries.insert(5, oldseries)
+                        print "added records as series1"
                         parent.insert(1, newseries)
                         print "Success! Serialized " + str(file) + "."
 
