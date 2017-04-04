@@ -17,7 +17,7 @@ if os.name == "nt":
 	#Finding Aid Directory
 	faDir = "H:\Departments\Archives\Students\Web Archiving\serialize"
 for file in os.listdir(faDir):
-    eadFile = os.path.join(faDir, str(file))
+    eadFile = os.path.join(faDir, file)
     faInput= ET.parse(eadFile, parser)
     fa = faInput.getroot()
 
