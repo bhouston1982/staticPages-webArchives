@@ -1,4 +1,14 @@
+
 # UWM Web Archives EAD update code
+
+## April 4 Update
+
+I've added two scripts to improve the formatting of our local EADs, to make them more receptive to adding Web Series.
++ createProcessed.py: This takes legacy finding aids (unserialized, components at the base C01 level), downshifts the component levels, and encapsulates them in a <c01+ level="otherlevel" otherlevel="processed"> tag. In addition to making it easier to add web series, this also makes it easier to add accessions later on.
++ serializeEads.py: This takes legacy finding aids (unserialized, components within a c01 "processed" tag) and creates a "General Files" series. This will make it easier to add series in future beyond the Web Archives series. Note that if the components are not nested in a c01 tag already, this script will fail; in this case, run createProcessed.py first.
+
+-------------------
+
 
 This is, as shown below, a fork of the University of Albany's code to generate subject and collection pages for their web archives collections. (My infinite gratitude to Greg for sharing this code with the community via the Archive-It blog.)
 
