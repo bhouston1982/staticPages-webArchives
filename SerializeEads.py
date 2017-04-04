@@ -43,7 +43,7 @@ for file in os.listdir(faDir):
                         fa.find(".//revisiondesc").insert(0,newchange)
                 except:
                         print "No revisiondescription note!"
-                        continue
+                        pass
                 #Move all components in the processed collection down one level.
                 #When I get better at this I will have it automatically count the levels and do that many loops.
                 #For now, we're just going to do it this way, through the c06 level.
@@ -71,7 +71,11 @@ for file in os.listdir(faDir):
                         title = olddid.find("unittitle[1]")                        
                         olddid.remove(uid)     
                         unitdate = title.find("unitdate[1]")
-                        title.text = "1. General Files, " + unitdate.text
+                        try:
+                                title.text = "1. General Files, " + unitdate.text
+                        except:
+                                unitdate = olddid.find("unitdate[1]")
+                                title.text = "1. General Files, " + unitdate.text
                         olddid.insert(1, unitdate)
                         print "inserted series unitdate"
                         extent = olddid.find("physdesc[1]")
