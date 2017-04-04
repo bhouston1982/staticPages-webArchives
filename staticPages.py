@@ -471,7 +471,7 @@ for collection in collections:
                                                                                       
                 faString = ET.tostring(fa, pretty_print=True, xml_declaration=True, encoding="utf-8")
                 faFile = open(eadFile, "w")
-                faFile.write(faString)
+                faFile.write('<?xml version="1.0" encoding="utf-8"?>\n<!-- <!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "http://lcweb2.loc.gov/xmlcommon/dtds/ead2002/ead.dtd"  [ <!ENTITY uwmlogo SYSTEM "foo.jpg" NDATA jpeg>] > -->\n'+faString)
                 faFile.close()
 
 
