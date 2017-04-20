@@ -111,6 +111,42 @@ for file in os.listdir(faDir):
                         parent.insert(1, newseries)
                         print "Success! Serialized " + str(file) + "."
 
+                        #Create the arrangement note (unless it already exists)
+                        if fa.find("archdesc/arrangement") is None:
+                                arrangement = ET.Element("arrangement")
+                                arrangement.set("encodinganalog", "351")
+                                arrP = ET.SubElement(arrangement, "p")
+                                arrP.text = "The collection is organized into the following series:"
+                                arrList = ET.SubElement(arrangement, "list")
+                                arrList.set("type", "ordered")
+                                arrList.set("numeration", "arabic")
+                                arrItem = ET.SubElement(arrList, "item")
+                                arrRef = ET.SubElement(arrItem, "ref")
+                                arrRef.set("target", "series1")
+                                arrRef.set("show", "replace")
+                                arrRef.set("actuate", "onrequest")
+                                arrRef.text = "General Files, " + unitdate.text
+                                fa.find("archdesc").insert(3, arrangement)
+                        elif fa.find("archdesc/arrangement/list[@type='ordered']") is None:
+                                arrangement = fa.find("archdesc/arrangement")
+                                arrP = ET.SubElement(arrangement, "p")
+                                arrP.text = "The collection is organized into the following series:"
+                                arrangement.append(arrP)
+                                arrList = ET.SubElement(arrangement, "list")
+                                arrList.set("type", "ordered")
+                                arrList.set("numeration", "arabic")
+                                arrItem = ET.SubElement(arrList, "item")
+                                arrRef = ET.SubElement(arrItem, "ref")
+                                arrRef.set("target", "series1")
+                                arrRef.set("show", "replace")
+                                arrRef.set("actuate", "onrequest")
+                                arrRef.text = "General Files, " + unitdate.text
+                                arrangement.append(arrList)
+                        else:
+                                print "The arrangement note with series is already there!"
+                                
+                                
+
                 
         #Don't forget to save your work!
                 except Exception, Argument:
