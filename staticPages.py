@@ -177,7 +177,8 @@ for collection in collections:
                                                 
                 print "Series " + webArchSeries
                 
-                           
+              
+                                
                 
                 #find or create Web Archvies Series
                 if collection[6] == 1:
@@ -463,6 +464,16 @@ for collection in collections:
                                                        series.append(wayFile)
                 else:
                         print "Haven't done this level yet!"
+                #Add Arrangement Note as needed
+                if fa.xpath("//arrangement//item[@id='web']") is None:
+                        webSeries = ET.Element("item")
+                        webRef = ET.SubElement(webSeries,"ref")
+                        webRef.set("target", str(WebArchSeries))
+                        webRef.set("show", "replace")
+                        webRef.set("actuate", "onrequest")
+                        webRef.set("id", "web")
+                        webRef.text = "Web Archives, " + unitdate.text
+                        fa.find("arrangement/list[@type='ordered']").append(webSeries)
                                                                                       
                 faString = ET.tostring(fa, pretty_print=True, xml_declaration=False, encoding="utf-8")
                 faFile = open(eadFile, "w")
