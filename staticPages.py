@@ -154,8 +154,10 @@ for collection in collections:
                 changedate.text = now.strftime("%B %d, %Y")
                 changeitem = ET.SubElement(newchange, "item")
                 changeitem.text = "Brad Houston updated the finding aid to reflect addition of new web URLs(" + webArchSeries +", " + webArchSub +")."
-                fa.find(".//revisiondesc").insert(0,newchange)
-                
+                try:
+                        fa.find(".//revisiondesc").insert(0,newchange)
+                except:
+                        pass
                 #Add Web Archives not in <phystech>
                 if fa.find("archdesc/descgrp/phystech") is None:
                         phystech = ET.Element("phystech")
@@ -200,12 +202,7 @@ for collection in collections:
                                                 if series.find("did") is None:
                                                         did = ET.Element("did")
                                                         series.insert(0, did)
-                                                #find or create <unitid>
-                                                if series.find("did/unitid") is None:
-                                                        unitid = ET.Element("unitid")
-                                                        unitid.text = "series" + str(collection[10])
-                                                        series.find("did").insert(0, unitid)
-                                                #update <unittitle>
+                                                                                                #update <unittitle>
                                                 if series.find("did/unittitle") is None:
                                                         unittitle = ET.Element("unittitle")
                                                         unittitle.text =str(collection[10]) + ". Web Archives, "
@@ -213,6 +210,8 @@ for collection in collections:
                                                 #remove existing <unitdate>s
                                                 if not series.find("did/unitdate") is None:
                                                         series.find("did").remove(series.find("did/unitdate"))
+                                                if not series.find("did/unittitle/unitdate") is None:
+                                                        series.find("did/unittitle").remove(series.find("did/unittitle/unitdate"))
                                                 #Add new <unitdate>
                                                 unitdate = ET.Element("unitdate")
                                                 unitdate.set("type", "inclusive")
@@ -371,11 +370,7 @@ for collection in collections:
                                                        did = ET.Element("did")
                                                        series.insert(0, did)
                                                #find or create <unitid>
-                                               if series.find("did/unitid") is None:
-                                                       unitid = ET.Element("unitid")                                                       
-                                                       unitid.text = "Web Subseries " + str(collection[8])
-                                                       series.find("did").insert(0, unitid)
-                                               #update <unittitle>
+                                                                                              #update <unittitle>
                                                if series.find("did/unittitle") is None:
                                                        unittitle = ET.Element("unittitle")
                                                        unittitle.text = str(collection[7]) + ", "
@@ -469,7 +464,7 @@ for collection in collections:
                 else:
                         print "Haven't done this level yet!"
                                                                                       
-                faString = ET.tostring(fa, pretty_print=True, xml_declaration=True, encoding="utf-8")
+                faString = ET.tostring(fa, pretty_print=True, xml_declaration=False, encoding="utf-8")
                 faFile = open(eadFile, "w")
                 faFile.write('<?xml version="1.0" encoding="utf-8"?>\n<!-- <!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "http://lcweb2.loc.gov/xmlcommon/dtds/ead2002/ead.dtd"  [ <!ENTITY uwmlogo SYSTEM "foo.jpg" NDATA jpeg>] > -->\n'+faString)
                 faFile.close()
