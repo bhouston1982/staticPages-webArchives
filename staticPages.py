@@ -157,6 +157,7 @@ for collection in collections:
                 try:
                         fa.find(".//revisiondesc").insert(0,newchange)
                 except:
+                        print "no revision note present"
                         pass
                 #Add Web Archives not in <phystech>
                 if fa.find("archdesc/descgrp/phystech") is None:
@@ -465,15 +466,18 @@ for collection in collections:
                 else:
                         print "Haven't done this level yet!"
                 #Add Arrangement Note as needed
-                if fa.xpath("//arrangement//item[@id='web']") is None:
+                if fa.find("archdesc/arrangement/list/item[@id='web']") is None:
                         webSeries = ET.Element("item")
+                        webSeries.set("id", "web")
                         webRef = ET.SubElement(webSeries,"ref")
-                        webRef.set("target", str(WebArchSeries))
+                        webRef.set("target", str(webArchSeries))
                         webRef.set("show", "replace")
                         webRef.set("actuate", "onrequest")
-                        webRef.set("id", "web")
                         webRef.text = "Web Archives, " + unitdate.text
-                        fa.find("arrangement/list[@type='ordered']").append(webSeries)
+                        fa.find("archdesc/arrangement/list[@type='ordered']").append(webSeries)
+                        print "Added Arrangement entry!"
+                else:
+                        print "The Arrangement entry is already there!"
                                                                                       
                 faString = ET.tostring(fa, pretty_print=True, xml_declaration=False, encoding="utf-8")
                 faFile = open(eadFile, "w")
